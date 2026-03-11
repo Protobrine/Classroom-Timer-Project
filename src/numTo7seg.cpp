@@ -1,14 +1,6 @@
 #include <Arduino.h>
 #include "functions.h"
 
-#define segE 12
-#define segD 14
-#define segC 27
-#define segG 26
-#define segA 25
-#define segF 33
-#define segB 32
-
 void numTo7seg(byte seg7Num) {
   if (seg7Num == 9)
   {
