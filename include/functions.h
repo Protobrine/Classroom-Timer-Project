@@ -11,9 +11,9 @@
 #define segF 33
 #define segB 32
 #define d4 15
-#define d3 4
+#define d3 2
 #define d2 0
-#define d1 2
+#define d1 13
 
 void numTo7seg(byte seg7Num);
 void timerDisplay(unsigned long timerSeconds);

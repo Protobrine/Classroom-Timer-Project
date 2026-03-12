@@ -1,10 +1,25 @@
 #include <Arduino.h>
+#include <Keypad.h>
 #include "functions.h"
 
 const int oneSec = 1000;
 unsigned long prevSecTime = 0;
-
 unsigned long totalSeconds = 3610; // Change the number to set how many seconds it will countdown
+
+const byte ROW_NUM = 4; //four rows
+const byte COLUMN_NUM = 4; //four columns
+
+char keys[ROW_NUM][COLUMN_NUM] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+
+byte pin_rows[ROW_NUM]      = {22,21,19,18};
+byte pin_column[COLUMN_NUM] = {5,17,16,4};
+
+Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
 void setup() {
   Serial.begin(9600);
@@ -21,8 +36,6 @@ void setup() {
   pinMode(d2, OUTPUT);
   pinMode(d1, OUTPUT);
 }
-
-
 
 void loop() {
   unsigned long currentTime = millis();
@@ -46,4 +59,10 @@ void loop() {
     prevSecTime += oneSec;
   }
 
+  char key = keypad.getKey();
+
+  if (key) {
+    Serial.println(key);
+  }
+  
 }
