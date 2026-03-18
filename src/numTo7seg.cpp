@@ -1,88 +1,91 @@
 #include <Arduino.h>
 #include "functions.h"
 
+#define inputHI HIGH
+#define inputLO LOW
+
 void numTo7seg(byte seg7Num) {
   if (seg7Num == 9)
   {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, HIGH);
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputHI);
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 8) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, LOW); 
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputLO); 
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 7) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, HIGH);
-    digitalWrite(segE, HIGH); 
-    digitalWrite(segF, HIGH);
-    digitalWrite(segG, HIGH);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputHI);
+    digitalWrite(segE, inputHI); 
+    digitalWrite(segF, inputHI);
+    digitalWrite(segG, inputHI);
   } else if (seg7Num == 6) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, HIGH);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, LOW); 
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputHI);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputLO); 
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 5) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, HIGH);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, HIGH); 
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputHI);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputHI); 
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 4) {
-    digitalWrite(segA, HIGH);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, HIGH);
-    digitalWrite(segE, HIGH); 
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputHI);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputHI);
+    digitalWrite(segE, inputHI); 
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 3) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, HIGH); 
-    digitalWrite(segF, HIGH);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputHI); 
+    digitalWrite(segF, inputHI);
+    digitalWrite(segG, inputLO);
   }  else if (seg7Num == 2) {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, HIGH);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, LOW); 
-    digitalWrite(segF, HIGH);
-    digitalWrite(segG, LOW);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputHI);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputLO); 
+    digitalWrite(segF, inputHI);
+    digitalWrite(segG, inputLO);
   } else if (seg7Num == 1) {
-    digitalWrite(segA, HIGH);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, HIGH);
-    digitalWrite(segE, HIGH); 
-    digitalWrite(segF, HIGH);
-    digitalWrite(segG, HIGH);
+    digitalWrite(segA, inputHI);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputHI);
+    digitalWrite(segE, inputHI); 
+    digitalWrite(segF, inputHI);
+    digitalWrite(segG, inputHI);
   } else {
-    digitalWrite(segA, LOW);
-    digitalWrite(segB, LOW);
-    digitalWrite(segC, LOW);
-    digitalWrite(segD, LOW);
-    digitalWrite(segE, LOW); 
-    digitalWrite(segF, LOW);
-    digitalWrite(segG, HIGH);
+    digitalWrite(segA, inputLO);
+    digitalWrite(segB, inputLO);
+    digitalWrite(segC, inputLO);
+    digitalWrite(segD, inputLO);
+    digitalWrite(segE, inputLO); 
+    digitalWrite(segF, inputLO);
+    digitalWrite(segG, inputHI);
   }
   
 }

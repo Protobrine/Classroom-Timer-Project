@@ -17,5 +17,6 @@
 
 void numTo7seg(byte seg7Num);
 void timerDisplay(unsigned long timerSeconds);
+byte keypadNumConvert(char keyInput);
 
 #endif
