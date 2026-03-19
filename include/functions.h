@@ -16,7 +16,10 @@
 #define d1 13
 
 void numTo7seg(byte seg7Num);
-void timerDisplay(unsigned long timerSeconds);
+void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode);
 byte keypadNumConvert(char keyInput);
+byte segInputLocation(char setupKey);
+unsigned long timerSetup(char setupKey, byte inputLocation);
+
 
 #endif

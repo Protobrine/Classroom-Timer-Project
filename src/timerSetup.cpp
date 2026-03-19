@@ -1,0 +1,62 @@
+#include <Arduino.h>
+#include "functions.h"
+
+byte timerInputSetup[6] =  {0,0,0,0,0,0};
+unsigned long totalSecondsSetup;
+
+unsigned long timerSetup(char setupKey, byte inputLocation) {
+  byte inputLoc = inputLocation;
+
+  if (setupKey == 'B') {
+    Serial.println("RESET");
+    timerInputSetup[0] = 0;
+    timerInputSetup[1] = 0;
+    timerInputSetup[2] = 0;
+    timerInputSetup[3] = 0;
+    timerInputSetup[4] = 0;
+    timerInputSetup[5] = 0;
+  }
+
+  if (keypadNumConvert(setupKey) <= 9) {
+    if (inputLoc == 2 || inputLoc == 4) {
+      if (keypadNumConvert(setupKey) <= 5) {
+        timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
+        Serial.print("Number Input: ");
+        Serial.println(keypadNumConvert(setupKey));
+      } else {
+        Serial.println("Time error");
+      }
+    } else if (inputLoc == 0) {
+      if (keypadNumConvert(setupKey) <= 2) {
+        timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
+        Serial.print("Number Input: ");
+        Serial.println(keypadNumConvert(setupKey));
+      } else {
+        Serial.println("Time error");
+      }
+    } else if (inputLoc == 1) {
+      if (timerInputSetup[0] == 2) {
+        if (keypadNumConvert(setupKey) <= 4) {
+          timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
+          Serial.print("Number Input: ");
+          Serial.println(keypadNumConvert(setupKey));
+        } else {
+          Serial.println("Time error");
+        }
+      } else if (timerInputSetup[0] != 2) {
+          timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
+          Serial.print("Number Input: ");
+          Serial.println(keypadNumConvert(setupKey));
+      }
+    } else if (inputLoc == 3 || inputLoc == 5) {
+      timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
+      Serial.print("Number Input: ");
+      Serial.println(keypadNumConvert(setupKey));
+    } else {
+      Serial.println("Time error");
+    }
+  }
+
+  return totalSecondsSetup = (timerInputSetup[0]*3600*10) + (timerInputSetup[1]*3600) + (timerInputSetup[2]*60*10) + (timerInputSetup[3]*60) + 
+  (timerInputSetup[4]*10) + (timerInputSetup[5]);
+}
