@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Keypad.h>
-#include "functions.h"
 #include <WiFi.h>
+#include "functions.h"
 #include "time.h"
 
 // Replace with your network credentials
@@ -13,7 +13,12 @@ const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 28800;    // Adjust this for your timezone
 const int daylightOffset_sec = 0;  // Adjust if DST is in effect
 unsigned int NTPDelay;
-byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connected
+byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connectedb
+byte updateOnce = 0;
+
+unsigned long wifiTimePrev = 0;
+unsigned long prevWifiConnect = 10000;
+int timeDelay = 500;
 
 const int oneSec = 1000;
 unsigned long prevSecTime = 0;
@@ -39,17 +44,6 @@ byte pin_column[COLUMN_NUM] = {5,17,16,4};
 
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
-void printDateTime() {
-  struct tm timeinfo;
-  if (!getLocalTime(&timeinfo)) {
-    Serial.println("Failed to obtain time");
-    return;
-  }
-  char formattedTime[80];  // Buffer to store the formatted string
-  strftime(formattedTime, sizeof(formattedTime), "%A, %B %d %Y %H:%M:%S", &timeinfo);
-  Serial.println(formattedTime);
-}
-
 void setup() {
   Serial.begin(9600);
 
@@ -65,22 +59,6 @@ void setup() {
   pinMode(d2, OUTPUT);
   pinMode(d1, OUTPUT);
 
-  if (tryNetwork == 0) {
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    Serial.print("Connecting to WiFi ..");
-    while (WiFi.status() != WL_CONNECTED) {
-      Serial.print('.');
-      delay(500);
-    }
-    Serial.println("\nConnected to WiFi!");
-
-    // Configure NTP
-    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-    Serial.println("NTP time configured.");
-    tryNetwork = 1;
-  }
-
 }
 
 void loop() {
@@ -88,9 +66,32 @@ void loop() {
   char key = keypad.getKey();
   byte inputLoc;
 
-  if (setupMode == 0 && changeDisplay == 1)
-  {
-    timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
+  // NTP Things
+  if (tryNetwork == 0) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    Serial.print("Connecting to WiFi ..");
+    Serial.println("\nConnected to WiFi!");
+
+    // Configure NTP
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+    Serial.println("NTP time configured.");
+    tryNetwork = 1;
+  }
+  
+  if (setupMode == 0 && changeDisplay == 1) {
+  timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
+  }
+
+  if (setupMode == 0 && changeDisplay == 0) {
+    if (updateOnce == 0) {
+        prevDisplaySec = currentTime + 10000;
+        Serial.print("---- Previous time check: ");
+        Serial.println(prevDisplaySec);
+        updateOnce = 1;
+      }
+    unsigned long totalClockTime = getTotalSecTime();
+    clockDisplay(totalClockTime, prevDisplaySec);
   }
 
   // Timer decrement
@@ -104,13 +105,13 @@ void loop() {
 
     prevSecTime += oneSec;
   }
-  
+
   if (currentTime - prevSecTime >= oneSec) {
     Serial.print("Seconds check: ");
     Serial.println(totalSeconds);
     Serial.print("Main check: ");
     Serial.println(currentTime);
-    printDateTime();
+    Serial.print("Total seconds of time: ");
     prevSecTime += oneSec;
   }
 
@@ -122,10 +123,12 @@ void loop() {
   // Stop and Start
   if (key == 'A' && stopStart == 0 && setupMode == 0) {
     stopStart = 1;
+    changeDisplay = 1;
     prevSecTime = currentTime;
     Serial.println("Timer Start");
   } else if (key == 'A' && stopStart == 1 && setupMode == 0) {
     stopStart = 0;
+    changeDisplay = 1;
     Serial.println("Timer pause");
   }
 
@@ -133,6 +136,7 @@ void loop() {
   if (key == 'C' && setupMode == 0) {
     setupMode = 1;
     stopStart = 0;
+    changeDisplay = 1;
     Serial.println("Setup  on");
   } else if (key == 'C' && setupMode == 1) {
     setupMode = 0;
@@ -147,13 +151,13 @@ void loop() {
     timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
   }  
   // Change display
-  if (key == 'D' && changeDisplay == 0) {
+  if (key == 'D' && changeDisplay == 0 && setupMode == 0) {
     changeDisplay = 1;
     prevDisplaySec = currentTime;
     Serial.println("Display changed to timer");
-  } else if (key == 'D' && changeDisplay == 1) {
+  } else if (key == 'D' && changeDisplay == 1 && setupMode == 0) {
     changeDisplay = 0;
+    prevDisplaySec = currentTime;
     Serial.println("Display changed to clock");
   } 
-  
 }

@@ -17,6 +17,8 @@
 
 void numTo7seg(byte seg7Num);
 void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode, unsigned long switchTime);
+void clockDisplay(unsigned long clockSeconds, unsigned long switchTime);
+unsigned long getTotalSecTime();
 byte keypadNumConvert(char keyInput);
 byte segInputLocation(char setupKey);
 unsigned long timerSetup(char setupKey, byte inputLocation);
