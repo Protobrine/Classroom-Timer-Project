@@ -1,0 +1,381 @@
+#include <Arduino.h>
+#include "functions.h"
+
+byte buzzerSwitch = 0;
+
+unsigned int blank = 1000;
+unsigned int buzzInterval = 500;
+unsigned int chosenDelay = 0;
+
+unsigned int buzzDot = 200;
+unsigned int buzzLong = 1000;
+
+unsigned long prevMilliBuzz = 0;
+unsigned long prevMilliBuzz1 = 0;
+
+byte buzzSetup = 0;
+byte buzzRepeat = 0;
+byte buzzRepeat2 = 0;
+byte buzzAlternate = 0;
+byte absoluteZero = 0; // 0 - not yet alarmed | 1 - alarmed
+
+void ringBuzzer(unsigned long buzzTotalSeconds) {
+  unsigned long currentTime = millis();
+
+  if (buzzTotalSeconds == 3600 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 2700 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 1800 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 900 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 600 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 300 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 60 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+    absoluteZero = 0;
+  } else if (buzzTotalSeconds == 0 && buzzSetup == 0) {
+    prevMilliBuzz = currentTime;
+    prevMilliBuzz1 = currentTime;
+    buzzSetup = 1;
+
+    buzzRepeat2 = 0;
+  }
+
+  //60 minutes
+  if (buzzTotalSeconds <= 3600 && buzzTotalSeconds > 2700) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 3) {
+        if (currentTime - prevMilliBuzz <= buzzDot) {
+          digitalWrite(buzzer, HIGH);
+        }
+        if (currentTime - prevMilliBuzz > buzzDot && currentTime - prevMilliBuzz <= buzzDot + buzzInterval) {
+          digitalWrite(buzzer, LOW);
+        }
+        if (currentTime - prevMilliBuzz >= buzzDot + buzzInterval) {
+          prevMilliBuzz += buzzDot + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzDot + buzzInterval)*4 + blank) {
+        prevMilliBuzz1 += (buzzDot + buzzInterval)*4 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 45 minutes
+  if (buzzTotalSeconds <= 2700 && buzzTotalSeconds > 1800) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 2) {
+        if (currentTime - prevMilliBuzz <= buzzDot) {
+          digitalWrite(buzzer, HIGH);
+        }
+        if (currentTime - prevMilliBuzz > buzzDot && currentTime - prevMilliBuzz <= buzzDot + buzzInterval) {
+          digitalWrite(buzzer, LOW);
+        }
+        if (currentTime - prevMilliBuzz >= buzzDot + buzzInterval) {
+          prevMilliBuzz += buzzDot + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzDot + buzzInterval)*3 + blank) {
+        prevMilliBuzz1 += (buzzDot + buzzInterval)*3 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 30 minutes
+  if (buzzTotalSeconds <= 1800 && buzzTotalSeconds > 900) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 1) {
+        if (currentTime - prevMilliBuzz <= buzzDot) {
+          digitalWrite(buzzer, HIGH);
+        }
+        if (currentTime - prevMilliBuzz > buzzDot && currentTime - prevMilliBuzz <= buzzDot + buzzInterval) {
+          digitalWrite(buzzer, LOW);
+        }
+        if (currentTime - prevMilliBuzz >= buzzDot + buzzInterval) {
+          prevMilliBuzz += buzzDot + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzDot + buzzInterval)*2 + blank) {
+        prevMilliBuzz1 += (buzzDot + buzzInterval)*2 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 15 minutes
+  if (buzzTotalSeconds <= 900 && buzzTotalSeconds > 600) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 3) {
+        if (buzzRepeat == 0) {
+          if (currentTime - prevMilliBuzz <= buzzLong) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzLong;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        } else if (buzzRepeat > 0) {
+          if (currentTime - prevMilliBuzz <= buzzDot) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzDot;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        }
+        if (currentTime - prevMilliBuzz >= chosenDelay + buzzInterval) {
+          prevMilliBuzz += chosenDelay + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*3 + blank) {
+        prevMilliBuzz1 += (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*3 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 10 minutes
+  if (buzzTotalSeconds <= 600 && buzzTotalSeconds > 300) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 2) {
+        if (buzzRepeat == 0) {
+          if (currentTime - prevMilliBuzz <= buzzLong) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzLong;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        } else if (buzzRepeat > 0) {
+          if (currentTime - prevMilliBuzz <= buzzDot) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzDot;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        }
+        if (currentTime - prevMilliBuzz >= chosenDelay + buzzInterval) {
+          prevMilliBuzz += chosenDelay + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*2 + blank) {
+        prevMilliBuzz1 += (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*2 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 5 minutes
+  if (buzzTotalSeconds <= 300 && buzzTotalSeconds > 60) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 1) {
+        if (buzzRepeat == 0) {
+          if (currentTime - prevMilliBuzz <= buzzLong) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzLong;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        } else if (buzzRepeat > 0) {
+          if (currentTime - prevMilliBuzz <= buzzDot) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzDot;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        }
+        if (currentTime - prevMilliBuzz >= chosenDelay + buzzInterval) {
+          prevMilliBuzz += chosenDelay + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*1 + blank) {
+        prevMilliBuzz1 += (buzzLong + buzzInterval) + (buzzDot + buzzInterval)*1 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // 1 minutes
+  if (buzzTotalSeconds <= 60 && buzzTotalSeconds > 0) {
+    if (buzzRepeat2 <= 3) {
+      if (buzzRepeat <= 3) {
+        if (buzzAlternate == 1) {
+          if (currentTime - prevMilliBuzz <= buzzLong) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzLong;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        } else if (buzzAlternate == 0) {
+          if (currentTime - prevMilliBuzz <= buzzDot) {
+            digitalWrite(buzzer, HIGH);
+            chosenDelay = buzzDot;
+          }
+          if (currentTime - prevMilliBuzz > chosenDelay && currentTime - prevMilliBuzz <= chosenDelay + buzzInterval) {
+            digitalWrite(buzzer, LOW);
+          }
+        }
+        if (currentTime - prevMilliBuzz >= chosenDelay + buzzInterval) {
+          prevMilliBuzz += chosenDelay + buzzInterval;
+          buzzRepeat++;
+
+          if (buzzAlternate == 0) {
+            buzzAlternate = 1;
+          } else if (buzzAlternate = 1) {
+            buzzAlternate = 0;
+          }          
+
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval)*2 + (buzzDot + buzzInterval)*2 + blank) {
+        prevMilliBuzz1 += (buzzLong + buzzInterval)*2 + (buzzDot + buzzInterval)*2 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 3) {
+        buzzSetup = 0;
+      }
+    }
+  }
+
+  // ABSOLUTE ZERO
+  if (buzzTotalSeconds == 0 && absoluteZero == 0) {
+    if (buzzRepeat2 <= 1) {
+      if (buzzRepeat <= 3) {
+        if (currentTime - prevMilliBuzz <= buzzLong) {
+          digitalWrite(buzzer, HIGH);
+        }
+        if (currentTime - prevMilliBuzz > buzzLong && currentTime - prevMilliBuzz <= buzzLong + buzzInterval) {
+          digitalWrite(buzzer, LOW);
+        }
+        if (currentTime - prevMilliBuzz >= buzzLong + buzzInterval) {
+          prevMilliBuzz += buzzLong + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval)*4 + blank) {
+        prevMilliBuzz1 += (buzzLong + buzzInterval)*4 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 1) {
+        buzzSetup = 0;
+        absoluteZero = 1;
+      }
+    }
+  }
+}

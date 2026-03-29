@@ -6,10 +6,9 @@ unsigned long timeTotalSec = 0;
 unsigned long getTotalSecTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
-    Serial.println("Failed to obtain time");
+    Serial.println("Failed to obtain time function");
     return 0;
   }
-
 
   //%H = hours | %M = Minutes | %S = Seconds
   char timeHours[80];

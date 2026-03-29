@@ -26,29 +26,7 @@ unsigned long timerSetup(char setupKey, byte inputLocation) {
       } else {
         Serial.println("Time error");
       }
-    } else if (inputLoc == 0) {
-      if (keypadNumConvert(setupKey) <= 2) {
-        timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
-        Serial.print("Number Input: ");
-        Serial.println(keypadNumConvert(setupKey));
-      } else {
-        Serial.println("Time error");
-      }
-    } else if (inputLoc == 1) {
-      if (timerInputSetup[0] == 2) {
-        if (keypadNumConvert(setupKey) <= 4) {
-          timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
-          Serial.print("Number Input: ");
-          Serial.println(keypadNumConvert(setupKey));
-        } else {
-          Serial.println("Time error");
-        }
-      } else if (timerInputSetup[0] != 2) {
-          timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
-          Serial.print("Number Input: ");
-          Serial.println(keypadNumConvert(setupKey));
-      }
-    } else if (inputLoc == 3 || inputLoc == 5) {
+    } else if (inputLoc == 0 || inputLoc == 1 || inputLoc == 3 || inputLoc == 5) {
       timerInputSetup[inputLoc] = keypadNumConvert(setupKey);
       Serial.print("Number Input: ");
       Serial.println(keypadNumConvert(setupKey));

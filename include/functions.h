@@ -15,9 +15,13 @@
 #define d2 0
 #define d1 13
 
+#define buzzer 23
+
 void numTo7seg(byte seg7Num);
+void nullTo7seg();
+void ringBuzzer(unsigned long buzzTotalSeconds);
 void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode, unsigned long switchTime);
-void clockDisplay(unsigned long clockSeconds, unsigned long switchTime);
+void clockDisplay(unsigned long clockSeconds, unsigned long switchTime, byte clockState);
 unsigned long getTotalSecTime();
 byte keypadNumConvert(char keyInput);
 byte segInputLocation(char setupKey);

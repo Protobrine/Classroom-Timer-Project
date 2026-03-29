@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include <WiFi.h>
+#include "esp_sntp.h"
 #include "functions.h"
 #include "time.h"
 
@@ -13,13 +14,12 @@ const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 28800;    // Adjust this for your timezone
 const int daylightOffset_sec = 0;  // Adjust if DST is in effect
 unsigned int NTPDelay;
+unsigned int connectingLength = 5000;
 byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connectedb
-byte updateOnce = 0;
+byte instabilityChange = 0; // 0 - no instability | 1 - instability
+byte changePrevNTP = 0; 
 
-unsigned long wifiTimePrev = 0;
-unsigned long prevWifiConnect = 10000;
-int timeDelay = 500;
-
+// Countdown timer and checker
 const int oneSec = 1000;
 unsigned long prevSecTime = 0;
 unsigned long totalSeconds = 0; // Change the number to set how many seconds it will countdown
@@ -28,6 +28,10 @@ byte stopStart = 0; // 0 = Pause |  1 = Start
 byte setupMode = 0; // 0 = noSetup | 1 = setupMode
 byte changeDisplay = 0; // 0 = Clock | 1 = Timer
 unsigned long prevDisplaySec = 0;
+
+// Every minute change display
+unsigned int oneMinute = 60000; // one minute
+unsigned long prevChangeDisp = 0;
 
 const byte ROW_NUM = 4;
 const byte COLUMN_NUM = 4;
@@ -59,12 +63,16 @@ void setup() {
   pinMode(d2, OUTPUT);
   pinMode(d1, OUTPUT);
 
+  pinMode(buzzer, OUTPUT);
 }
 
 void loop() {
   unsigned long currentTime = millis();
   char key = keypad.getKey();
   byte inputLoc;
+  if (setupMode == 0 && stopStart == 1) {
+    ringBuzzer(totalSeconds);
+  }
 
   // NTP Things
   if (tryNetwork == 0) {
@@ -78,20 +86,39 @@ void loop() {
     Serial.println("NTP time configured.");
     tryNetwork = 1;
   }
+
+  if (instabilityChange == 0) {
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo, connectingLength)) {
+      Serial.println("Failed to obtain time main");
+      sntp_stop();
+      instabilityChange = 1;
+      Serial.print("Instability check: ");
+      Serial.println(instabilityChange);
+
+      prevDisplaySec = currentTime + connectingLength + 1000;
+      
+    } else if (changePrevNTP == 0) {
+
+      prevDisplaySec = currentTime + connectingLength;
+      Serial.print("Prev time: ");
+      Serial.println(prevDisplaySec);
+      changePrevNTP = 1;
+    }
+  }
   
   if (setupMode == 0 && changeDisplay == 1) {
-  timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
+    timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
   }
 
-  if (setupMode == 0 && changeDisplay == 0) {
-    if (updateOnce == 0) {
-        prevDisplaySec = currentTime + 10000;
-        Serial.print("---- Previous time check: ");
-        Serial.println(prevDisplaySec);
-        updateOnce = 1;
-      }
+  if (setupMode == 0 && changeDisplay == 0 && instabilityChange == 0) {
     unsigned long totalClockTime = getTotalSecTime();
-    clockDisplay(totalClockTime, prevDisplaySec);
+    clockDisplay(totalClockTime, prevDisplaySec, instabilityChange);
+  }
+
+  if (setupMode == 0 && changeDisplay == 0 && instabilityChange == 1) {
+    byte totalClockTime = 0;
+    clockDisplay(totalClockTime, prevDisplaySec, instabilityChange);
   }
 
   // Timer decrement
@@ -107,11 +134,19 @@ void loop() {
   }
 
   if (currentTime - prevSecTime >= oneSec) {
-    Serial.print("Seconds check: ");
+/*     Serial.print("Seconds check: ");
     Serial.println(totalSeconds);
     Serial.print("Main check: ");
     Serial.println(currentTime);
-    Serial.print("Total seconds of time: ");
+
+    if (instabilityChange == 0) {
+      unsigned long totalClockTime = getTotalSecTime();
+      struct tm timeinfo;
+
+      Serial.print("Clock sec check: ");
+      Serial.println(totalClockTime);
+      Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    } */
     prevSecTime += oneSec;
   }
 
@@ -119,12 +154,12 @@ void loop() {
     Serial.println(key);
   }
 
-
   // Stop and Start
   if (key == 'A' && stopStart == 0 && setupMode == 0) {
     stopStart = 1;
     changeDisplay = 1;
     prevSecTime = currentTime;
+    prevChangeDisp = currentTime;
     Serial.println("Timer Start");
   } else if (key == 'A' && stopStart == 1 && setupMode == 0) {
     stopStart = 0;
@@ -133,12 +168,11 @@ void loop() {
   }
 
   //Setup Mode
-  if (key == 'C' && setupMode == 0) {
+  if (key == 'C' && setupMode == 0 && changeDisplay == 1) {
     setupMode = 1;
     stopStart = 0;
-    changeDisplay = 1;
     Serial.println("Setup  on");
-  } else if (key == 'C' && setupMode == 1) {
+  } else if (key == 'C' && setupMode == 1 && changeDisplay == 1) {
     setupMode = 0;
     stopStart = 0;
     prevSecTime = currentTime;
@@ -154,10 +188,24 @@ void loop() {
   if (key == 'D' && changeDisplay == 0 && setupMode == 0) {
     changeDisplay = 1;
     prevDisplaySec = currentTime;
+    prevChangeDisp = currentTime;
     Serial.println("Display changed to timer");
   } else if (key == 'D' && changeDisplay == 1 && setupMode == 0) {
     changeDisplay = 0;
     prevDisplaySec = currentTime;
+    prevChangeDisp = currentTime;
     Serial.println("Display changed to clock");
-  } 
+  }
+
+  // Change display every minute
+  if (stopStart == 1 && instabilityChange == 0) {
+    if (currentTime - prevChangeDisp >= oneMinute) {
+      if (changeDisplay == 1) {
+        changeDisplay = 0;
+      } else if (changeDisplay == 0) {
+        changeDisplay = 1;
+      }
+      prevChangeDisp += oneMinute;
+    }
+  }
 }
