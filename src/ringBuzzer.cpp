@@ -17,6 +17,7 @@ byte buzzSetup = 0;
 byte buzzRepeat = 0;
 byte buzzRepeat2 = 0;
 byte buzzAlternate = 0;
+byte changeBuzz = 0;
 byte absoluteZero = 0; // 0 - not yet alarmed | 1 - alarmed
 
 void ringBuzzer(unsigned long buzzTotalSeconds) {
@@ -349,8 +350,11 @@ void ringBuzzer(unsigned long buzzTotalSeconds) {
 
   // ABSOLUTE ZERO
   if (buzzTotalSeconds == 0 && absoluteZero == 0) {
-    if (buzzRepeat2 <= 1) {
-      if (buzzRepeat <= 3) {
+    if (buzzRepeat2 <= 21) {
+      if (buzzRepeat2 >= 1) {
+        changeBuzz = 1;
+      }
+      if (buzzRepeat <= 3 && changeBuzz == 0) {
         if (currentTime - prevMilliBuzz <= buzzLong) {
           digitalWrite(buzzer, HIGH);
         }
@@ -364,7 +368,21 @@ void ringBuzzer(unsigned long buzzTotalSeconds) {
           Serial.println(prevMilliBuzz);
         }
       }
-      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval)*4 + blank) {
+      if (buzzRepeat <= 2 && changeBuzz == 1) {
+        if (currentTime - prevMilliBuzz <= buzzDot) {
+          digitalWrite(buzzer, HIGH);
+        }
+        if (currentTime - prevMilliBuzz > buzzDot && currentTime - prevMilliBuzz <= buzzDot + buzzInterval) {
+          digitalWrite(buzzer, LOW);
+        }
+        if (currentTime - prevMilliBuzz >= buzzDot + buzzInterval) {
+          prevMilliBuzz += buzzDot + buzzInterval;
+          buzzRepeat++;
+          Serial.print("Buzz test: ");
+          Serial.println(prevMilliBuzz);
+        }
+      }
+      if (currentTime - prevMilliBuzz1 >= (buzzLong + buzzInterval)*4 + blank && changeBuzz == 0) {
         prevMilliBuzz1 += (buzzLong + buzzInterval)*4 + blank;
         prevMilliBuzz += blank; 
         buzzRepeat2++;
@@ -372,9 +390,18 @@ void ringBuzzer(unsigned long buzzTotalSeconds) {
         Serial.print("Buzz test 2: ");
         Serial.println(prevMilliBuzz1);
       }
-      if (buzzRepeat2 == 1) {
+      if (currentTime - prevMilliBuzz1 >= (buzzDot + buzzInterval)*3 + blank && changeBuzz == 1) {
+        prevMilliBuzz1 += (buzzDot + buzzInterval)*3 + blank;
+        prevMilliBuzz += blank; 
+        buzzRepeat2++;
+        buzzRepeat = 0;
+        Serial.print("Buzz test 2: ");
+        Serial.println(prevMilliBuzz1);
+      }
+      if (buzzRepeat2 == 22) {
         buzzSetup = 0;
         absoluteZero = 1;
+        changeBuzz = 0;
       }
     }
   }

@@ -6,8 +6,8 @@
 #include "time.h"
 
 // Replace with your network credentials
-const char* ssid = "PLDTHOMEFIBR48EUV"; // WIFI name: PLDTHOMEFIBR48EUV
-const char* password = "PLDTWIFIXyFyz"; // WIFI Password: PLDTWIFIXyFyz
+const char* ssid = "TUPT_Electronics Project"; // WIFI name:
+const char* password = "1qAz2wSx"; // WIFI Password:
 
 // NTP server setup
 const char* ntpServer = "pool.ntp.org";
@@ -47,33 +47,50 @@ byte pin_rows[ROW_NUM]      = {22,21,19,18};
 byte pin_column[COLUMN_NUM] = {5,17,16,4};
 
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
+unsigned long prevDebouncer = 0;
+unsigned int debounceDelay = 500;
+byte keypadOnOff = 0;
 
 void setup() {
   Serial.begin(9600);
 
-  pinMode(segE, OUTPUT);
-  pinMode(segD, OUTPUT);
-  pinMode(segC, OUTPUT);
-  pinMode(segG, OUTPUT);
-  pinMode(segA, OUTPUT);
-  pinMode(segF, OUTPUT);
-  pinMode(segB, OUTPUT);
-  pinMode(d4, OUTPUT);
-  pinMode(d3, OUTPUT);
-  pinMode(d2, OUTPUT);
-  pinMode(d1, OUTPUT);
+  pinMode(extendPin, OUTPUT);
+  pinMode(STCP, OUTPUT);
+  pinMode(SHCP, OUTPUT); 
+  pinMode(DS1, OUTPUT);
+  pinMode(DS2, OUTPUT);
+  pinMode(DS3, OUTPUT);
+  pinMode(DS4, OUTPUT);
 
   pinMode(buzzer, OUTPUT);
+
+  Serial.println(WiFi.macAddress());
 }
 
 void loop() {
   unsigned long currentTime = millis();
-  char key = keypad.getKey();
   byte inputLoc;
+  char key = keypad.getKey();
   if (setupMode == 0 && stopStart == 1) {
     ringBuzzer(totalSeconds);
+    if (totalSeconds == 3600) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 2700) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 1800) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 900) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 600) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 300) {
+      changeDisplay = 1;
+    } else if (totalSeconds == 60) {
+      changeDisplay = 1;
+    }
+    
   }
-
+  
   // NTP Things
   if (tryNetwork == 0) {
     WiFi.mode(WIFI_STA);
@@ -134,7 +151,7 @@ void loop() {
   }
 
   if (currentTime - prevSecTime >= oneSec) {
-/*     Serial.print("Seconds check: ");
+    Serial.print("Seconds check: ");
     Serial.println(totalSeconds);
     Serial.print("Main check: ");
     Serial.println(currentTime);
@@ -146,7 +163,7 @@ void loop() {
       Serial.print("Clock sec check: ");
       Serial.println(totalClockTime);
       Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-    } */
+    }
     prevSecTime += oneSec;
   }
 
@@ -180,7 +197,7 @@ void loop() {
   }
 
   if (setupMode == 1 && changeDisplay == 1) {
-    inputLoc = segInputLocation(key);
+    inputLoc = segInputLocation(key, 0);
     totalSeconds = timerSetup(key, inputLoc);
     timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
   }  

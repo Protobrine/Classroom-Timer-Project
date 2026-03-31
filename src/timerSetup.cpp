@@ -33,6 +33,7 @@ unsigned long timerSetup(char setupKey, byte inputLocation) {
     } else {
       Serial.println("Time error");
     }
+    segInputLocation(setupKey, 1);
   }
 
   return totalSecondsSetup = (timerInputSetup[0]*3600*10) + (timerInputSetup[1]*3600) + (timerInputSetup[2]*60*10) + (timerInputSetup[3]*60) + 

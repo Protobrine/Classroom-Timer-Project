@@ -41,84 +41,46 @@ void clockDisplay(unsigned long clockSeconds, unsigned long switchTime, byte clo
   if (clockState == 0){
     if (currentTime - prevMilliSecTimeD4 >= milliSecTime){
       firstSecDigitTime = ((clockSeconds % 3600)/60) % 10;
-      numTo7seg(firstSecDigitTime);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dHI);
+      shiftRegister(firstSecDigitTime, 1);
       prevMilliSecTimeD4 += milliSecTime;
     }
 
     if (currentTime - prevMilliSecTimeD3 >= milliSecTime) {
       secondSecDigitTime = ((clockSeconds % 3600)/60) / 10;
-      numTo7seg(secondSecDigitTime);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dHI);
-      digitalWrite(d4, dLO);
+      shiftRegister(secondSecDigitTime, 2);
       prevMilliSecTimeD3 += milliSecTime;
     }
 
     if (currentTime - prevMilliSecTimeD2 >= milliSecTime) {
       thirdSecDigitTime = (clockSeconds/3600) % 10;
-      numTo7seg(thirdSecDigitTime);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dHI);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(thirdSecDigitTime, 3);
       prevMilliSecTimeD2 += milliSecTime;
     } 
 
     if (currentTime - prevMilliSecTimeD1 >= milliSecTime) {
       fourthSecDigitTime = (clockSeconds/3600) / 10;
-      numTo7seg(fourthSecDigitTime);
-      digitalWrite(d1, dHI);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(fourthSecDigitTime, 4);
       prevMilliSecTimeD1 += milliSecTime;
     }
   } else if (clockState == 1) {
     if (currentTime - prevMilliSecTimeD4 >= milliSecTime){
-      nullTo7seg();
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dHI);
+      clockNullRegister(1);
       prevMilliSecTimeD4 += milliSecTime;
     }
 
     if (currentTime - prevMilliSecTimeD3 >= milliSecTime) {
-      nullTo7seg();
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dHI);
-      digitalWrite(d4, dLO);
+      clockNullRegister(2);
       prevMilliSecTimeD3 += milliSecTime;
     }
 
     if (currentTime - prevMilliSecTimeD2 >= milliSecTime) {
-      nullTo7seg();
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dHI);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      clockNullRegister(3);
       prevMilliSecTimeD2 += milliSecTime;
     } 
 
     if (currentTime - prevMilliSecTimeD1 >= milliSecTime) {
-      nullTo7seg();
-      digitalWrite(d1, dHI);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      clockNullRegister(4);
       prevMilliSecTimeD1 += milliSecTime;
     }
   }
-  
-  
-
-  
-
-  
 }

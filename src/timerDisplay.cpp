@@ -4,7 +4,7 @@
 #define dHI HIGH
 #define dLO LOW
 
-const byte milliSec5 = 16; // You can set this to adjust the flicker
+const byte milliSec5 = 20; // You can set this to adjust the flicker
 const int setupIndiInterval = 1000; // input indicator interval
 const int delayFor7seg = 100; // delay for stability
 
@@ -12,7 +12,6 @@ unsigned long prevMilliSecD4;
 unsigned long prevMilliSecD3;
 unsigned long prevMilliSecD2;
 unsigned long prevMilliSecD1;
-
 unsigned long prevMilliSetupD1;
 unsigned long prevMilliSetupD2;
 
@@ -68,41 +67,25 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     
     if (currentTime - prevMilliSecD4 >= milliSec5){
       firstSecDigit = ((timerSeconds % 3600)/60) % 10;
-      numTo7seg(firstSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dHI);
+      shiftRegister(firstSecDigit, 1);
       prevMilliSecD4 += milliSec5;
     }
 
     if (currentTime - prevMilliSecD3 >= milliSec5) {
       secondSecDigit = ((timerSeconds % 3600)/60) / 10;
-      numTo7seg(secondSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dHI);
-      digitalWrite(d4, dLO);
+      shiftRegister(secondSecDigit, 2);
       prevMilliSecD3 += milliSec5;
     }
 
     if (currentTime - prevMilliSecD2 >= milliSec5) {
       thirdSecDigit = (timerSeconds/3600) % 10;
-      numTo7seg(thirdSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dHI);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(thirdSecDigit, 3);
       prevMilliSecD2 += milliSec5;
     } 
 
     if (currentTime - prevMilliSecD1 >= milliSec5) {
       fourthSecDigit = (timerSeconds/3600) / 10;
-      numTo7seg(fourthSecDigit);
-      digitalWrite(d1, dHI);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(fourthSecDigit, 4);
       prevMilliSecD1 += milliSec5;
     } 
 
@@ -110,44 +93,28 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     
     if (currentTime - prevMilliSecD4 >= milliSec5){
       firstSecDigit = timerSeconds % 10;
-      numTo7seg(firstSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dHI);
+      shiftRegister(firstSecDigit, 1);
       prevMilliSecD4 += milliSec5;
     }
     
     if (currentTime - prevMilliSecD3 >= milliSec5) {
         
       secondSecDigit = (timerSeconds % 60) / 10;
-      numTo7seg(secondSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dHI);
-      digitalWrite(d4, dLO);
+      shiftRegister(secondSecDigit, 2);
       prevMilliSecD3 += milliSec5;
     }
 
     if (currentTime - prevMilliSecD2 >= milliSec5) {
         
       thirdSecDigit = (timerSeconds/60) % 10;
-      numTo7seg(thirdSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dHI);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(thirdSecDigit, 3);
       prevMilliSecD2 += milliSec5;
     } 
 
     if (currentTime - prevMilliSecD1 >= milliSec5) {
         
       fourthSecDigit = (timerSeconds/60) / 10;
-      numTo7seg(fourthSecDigit);
-      digitalWrite(d1, dHI);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(fourthSecDigit, 4);
       prevMilliSecD1 += milliSec5;
     } 
   }
@@ -158,88 +125,48 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     
     if (currentTime - prevMilliSecD4 >= milliSec5){
       firstSecDigit = ((timerSeconds % 3600)/60) % 10;
-      numTo7seg(firstSecDigit);
       if (displayFlicker == 0 && inputLoc == 3) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(1);
       } else if (displayFlicker == 1 && inputLoc == 3) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dHI);
+        shiftRegister(firstSecDigit, 1);
       } else if (inputLoc != 3) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dHI);
+        shiftRegister(firstSecDigit, 1);
       }
       prevMilliSecD4 += milliSec5;
     }
 
     if (currentTime - prevMilliSecD3 >= milliSec5) {
       secondSecDigit = ((timerSeconds % 3600)/60) / 10;
-      numTo7seg(secondSecDigit);
       if (displayFlicker == 0 && inputLoc == 2) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(2);
       } else if (displayFlicker == 1 && inputLoc == 2) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dHI);
-        digitalWrite(d4, dLO);
+        shiftRegister(secondSecDigit, 2);
       } else if (inputLoc != 2) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dHI);
-        digitalWrite(d4, dLO);
+        shiftRegister(secondSecDigit, 2);
       }
       prevMilliSecD3 += milliSec5;
     }
 
     if (currentTime - prevMilliSecD2 >= milliSec5) {
       thirdSecDigit = (timerSeconds/3600) % 10;
-      numTo7seg(thirdSecDigit);
       if (displayFlicker == 0 && inputLoc == 1) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(3);
       } else if (displayFlicker == 1 && inputLoc == 1) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dHI);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegister(thirdSecDigit, 3);
       } else if (inputLoc != 1) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dHI);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegister(thirdSecDigit, 3);
       }
       prevMilliSecD2 += milliSec5;
     } 
 
     if (currentTime - prevMilliSecD1 >= milliSec5) {
       fourthSecDigit = (timerSeconds/3600) / 10;
-      numTo7seg(fourthSecDigit);
       if (displayFlicker == 0 && inputLoc == 0) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(4);
       } else if (displayFlicker == 1 && inputLoc == 0) {
-        digitalWrite(d1, dHI);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegister(fourthSecDigit, 4);
       } else if (inputLoc != 0) {
-        digitalWrite(d1, dHI);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegister(fourthSecDigit, 4);
       }
       prevMilliSecD1 += milliSec5;
     } 
@@ -248,26 +175,13 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     
     if (currentTime - prevMilliSecD4 >= milliSec5){
       firstSecDigit = timerSeconds % 10;
-      numTo7seg(firstSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dHI);
+
       if (displayFlicker == 0 && inputLoc == 5) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(1);
       } else if (displayFlicker == 1 && inputLoc == 5) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dHI);
+        shiftRegister(firstSecDigit, 1);
       } else if (inputLoc != 5) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dHI);
+        shiftRegister(firstSecDigit, 1);
       }
       prevMilliSecD4 += milliSec5;
     }
@@ -275,22 +189,12 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     if (currentTime - prevMilliSecD3 >= milliSec5) {
         
       secondSecDigit = (timerSeconds % 60) / 10;
-      numTo7seg(secondSecDigit);
       if (displayFlicker == 0 && inputLoc == 4) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dLO);
-        digitalWrite(d4, dLO);
+        shiftRegisterFlicker(2);
       } else if (displayFlicker == 1 && inputLoc == 4) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dHI);
-        digitalWrite(d4, dLO);
+        shiftRegister(secondSecDigit, 2);
       } else if (inputLoc != 4) {
-        digitalWrite(d1, dLO);
-        digitalWrite(d2, dLO);
-        digitalWrite(d3, dHI);
-        digitalWrite(d4, dLO);
+        shiftRegister(secondSecDigit, 2);
       }
       prevMilliSecD3 += milliSec5;
     }
@@ -298,22 +202,14 @@ void timerDisplay(unsigned long timerSeconds, byte inputLocation, byte timerMode
     if (currentTime - prevMilliSecD2 >= milliSec5) {
         
       thirdSecDigit = ((timerSeconds % 3600) / 60) % 10;
-      numTo7seg(thirdSecDigit);
-      digitalWrite(d1, dLO);
-      digitalWrite(d2, dHI);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(thirdSecDigit, 3);
       prevMilliSecD2 += milliSec5;
     } 
 
     if (currentTime - prevMilliSecD1 >= milliSec5) {
         
       fourthSecDigit = ((timerSeconds % 3600) / 60) / 10;
-      numTo7seg(fourthSecDigit);
-      digitalWrite(d1, dHI);
-      digitalWrite(d2, dLO);
-      digitalWrite(d3, dLO);
-      digitalWrite(d4, dLO);
+      shiftRegister(fourthSecDigit, 4);
       prevMilliSecD1 += milliSec5;
     } 
   }
