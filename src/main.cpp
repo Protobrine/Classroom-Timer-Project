@@ -6,8 +6,8 @@
 #include "time.h"
 
 // Replace with your network credentials
-const char* ssid = "TUPT_Electronics Project"; // WIFI name:
-const char* password = "1qAz2wSx"; // WIFI Password:
+const char* ssid = "PRTBRN"; // WIFI name: TUPT_Electronics Project
+const char* password = "imverypogix19"; // WIFI Password: 1qAz2wSxv
 
 // NTP server setup
 const char* ntpServer = "pool.ntp.org";
@@ -15,8 +15,8 @@ const long gmtOffset_sec = 28800;    // Adjust this for your timezone
 const int daylightOffset_sec = 0;  // Adjust if DST is in effect
 unsigned int NTPDelay;
 unsigned int connectingLength = 5000;
-byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connectedb
-byte instabilityChange = 0; // 0 - no instability | 1 - instability
+byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connected
+byte instabilityChange = 0; // 0 - not connected within 5 seconds | 1 - connected within 5 seconds
 byte changePrevNTP = 0; 
 
 // Countdown timer and checker
@@ -30,7 +30,7 @@ byte changeDisplay = 0; // 0 = Clock | 1 = Timer
 unsigned long prevDisplaySec = 0;
 
 // Every minute change display
-unsigned int oneMinute = 60000; // one minute
+unsigned int changeDisplayInterval = 10000; // Display change interval
 unsigned long prevChangeDisp = 0;
 
 const byte ROW_NUM = 4;
@@ -65,6 +65,7 @@ void setup() {
   pinMode(buzzer, OUTPUT);
 
   Serial.println(WiFi.macAddress());
+  keypad.setDebounceTime(100);
 }
 
 void loop() {
@@ -87,11 +88,16 @@ void loop() {
       changeDisplay = 1;
     } else if (totalSeconds == 60) {
       changeDisplay = 1;
+    } else if (totalSeconds == 1) {
+      changeDisplay = 1;
     }
     
+  } else if (setupMode == 1) {
+    digitalWrite(buzzer, LOW);
   }
   
-  // NTP Things
+  
+  // NTP connection
   if (tryNetwork == 0) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
@@ -172,7 +178,7 @@ void loop() {
   }
 
   // Stop and Start
-  if (key == 'A' && stopStart == 0 && setupMode == 0) {
+  if (key == 'A' && stopStart == 0 && setupMode == 0 && totalSeconds != 0) {
     stopStart = 1;
     changeDisplay = 1;
     prevSecTime = currentTime;
@@ -196,11 +202,26 @@ void loop() {
     Serial.println("Setup  off");
   }
 
-  if (setupMode == 1 && changeDisplay == 1) {
+  if (setupMode == 1 && changeDisplay == 1) {  
     inputLoc = segInputLocation(key, 0);
-    totalSeconds = timerSetup(key, inputLoc);
+    if (inputLoc == 6) {
+      setupMode = 0;
+    }
+    if (key != 'B') {
+      totalSeconds = timerSetup(key, inputLoc, 0);
+    } else if (key == 'B') {
+      totalSeconds = timerSetup(key, inputLoc, 1);
+    }
+    
+    
     timerDisplay(totalSeconds, inputLoc, setupMode, prevDisplaySec);
-  }  
+  }
+
+  if (key == 'B' && changeDisplay == 1) {
+    totalSeconds = timerSetup(key, inputLoc, 1);
+    stopStart = 0;
+  }
+  
   // Change display
   if (key == 'D' && changeDisplay == 0 && setupMode == 0) {
     changeDisplay = 1;
@@ -215,14 +236,14 @@ void loop() {
   }
 
   // Change display every minute
-  if (stopStart == 1 && instabilityChange == 0) {
-    if (currentTime - prevChangeDisp >= oneMinute) {
+  if (stopStart == 1 && instabilityChange == 0 && totalSeconds != 0) {
+    if (currentTime - prevChangeDisp >= changeDisplayInterval) {
       if (changeDisplay == 1) {
         changeDisplay = 0;
       } else if (changeDisplay == 0) {
         changeDisplay = 1;
       }
-      prevChangeDisp += oneMinute;
+      prevChangeDisp += changeDisplayInterval;
     }
   }
 }

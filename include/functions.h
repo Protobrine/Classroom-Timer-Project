@@ -23,6 +23,6 @@ void clockDisplay(unsigned long clockSeconds, unsigned long switchTime, byte clo
 unsigned long getTotalSecTime();
 byte keypadNumConvert(char keyInput);
 byte segInputLocation(char setupKey, byte incrementer);
-unsigned long timerSetup(char setupKey, byte inputLocation);
+unsigned long timerSetup(char setupKey, byte inputLocation, byte reset);
 
 #endif

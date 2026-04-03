@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "functions.h"
 
+// Translation of digit to the block display
 int digits [10][8]{
   {0,1,1,1,1,1,1,0}, // digit 0
   {0,0,1,1,0,0,0,0}, // digit 1

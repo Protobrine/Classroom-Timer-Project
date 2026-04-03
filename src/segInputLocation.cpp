@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "functions.h"
 
-byte segLocation = 0;
-byte incrementThing = 0;
+byte segLocation = 0; // Location of number in setup mode 0-5
+byte incrementThing = 0; // When the number is pressed go to next number
 
 byte segInputLocation(char setupKey, byte incrementer) {
   incrementThing = incrementer;
@@ -32,6 +32,5 @@ byte segInputLocation(char setupKey, byte incrementer) {
     incrementThing = 0;
   }
   
-
   return segLocation;
 }

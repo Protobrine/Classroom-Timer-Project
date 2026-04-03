@@ -1,13 +1,14 @@
 #include <Arduino.h>
 #include "functions.h"
 
+// Conversion of input to seconds for the timer
 byte timerInputSetup[6] =  {0,0,0,0,0,0};
 unsigned long totalSecondsSetup;
 
-unsigned long timerSetup(char setupKey, byte inputLocation) {
+unsigned long timerSetup(char setupKey, byte inputLocation, byte reset) {
   byte inputLoc = inputLocation;
 
-  if (setupKey == 'B') {
+  if (setupKey == 'B' && reset == 1) {
     Serial.println("RESET");
     timerInputSetup[0] = 0;
     timerInputSetup[1] = 0;

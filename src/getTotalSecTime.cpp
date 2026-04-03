@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "functions.h"
 
+//To obtain the time of clock
 unsigned long timeTotalSec = 0;
-
 unsigned long getTotalSecTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {

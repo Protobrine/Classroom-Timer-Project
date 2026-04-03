@@ -4,7 +4,7 @@
 #define dHI HIGH
 #define dLO LOW
 
-const byte milliSecTime = 16; // You can set this to adjust the flicker
+const byte milliSecTime = 20; // You can set this to adjust the clock of shift register
 const int delayFor7segTime = 100; // delay for stability
 
 unsigned long prevMilliSecTimeD4;
@@ -36,7 +36,7 @@ void clockDisplay(unsigned long clockSeconds, unsigned long switchTime, byte clo
     prevMilliSecTimeD1 = seg7divide4Time*3 + delayFor7segTime + switchTime;
   }
 
-  // Clock | Well look at the time
+  // Clock | Time today
   
   if (clockState == 0){
     if (currentTime - prevMilliSecTimeD4 >= milliSecTime){
@@ -62,6 +62,8 @@ void clockDisplay(unsigned long clockSeconds, unsigned long switchTime, byte clo
       shiftRegister(fourthSecDigitTime, 4);
       prevMilliSecTimeD1 += milliSecTime;
     }
+
+  // Clock | When the wifi is not connected
   } else if (clockState == 1) {
     if (currentTime - prevMilliSecTimeD4 >= milliSecTime){
       clockNullRegister(1);

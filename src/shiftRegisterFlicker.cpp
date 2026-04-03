@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "functions.h"
 
+//Flicker of digits during setup mode
 int digitsFlicker [1][8]{
   {0,0,0,0,0,0,0,0}
 //A,B,C,D,E,F,G

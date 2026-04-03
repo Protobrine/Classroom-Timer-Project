@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "functions.h"
 
+// extension for the clocks of shift register
 int extendPosition [12][8] {
   {1,1,1,1,1,1,1,1}, // Pos 1
   {0,1,1,1,1,1,1,1},

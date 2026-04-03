@@ -4,8 +4,8 @@
 #define dHI HIGH
 #define dLO LOW
 
-const byte milliSec5 = 20; // You can set this to adjust the flicker
-const int setupIndiInterval = 1000; // input indicator interval
+const byte milliSec5 = 20; // You can set this to adjust the shift register clock
+const int setupIndiInterval = 1000; // input indicator interval or blinking
 const int delayFor7seg = 100; // delay for stability
 
 unsigned long prevMilliSecD4;

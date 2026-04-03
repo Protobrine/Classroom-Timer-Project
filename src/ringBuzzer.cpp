@@ -3,21 +3,21 @@
 
 byte buzzerSwitch = 0;
 
-unsigned int blank = 1000;
-unsigned int buzzInterval = 500;
-unsigned int chosenDelay = 0;
+unsigned int blank = 1000; // Space in the morse code or after a sequence
+unsigned int buzzInterval = 500; // Interval between beeps
+unsigned int chosenDelay = 0; // if short or long is last beep
 
-unsigned int buzzDot = 200;
-unsigned int buzzLong = 1000;
+unsigned int buzzDot = 200; // short dot beep
+unsigned int buzzLong = 1000; // long dot beep
 
 unsigned long prevMilliBuzz = 0;
 unsigned long prevMilliBuzz1 = 0;
 
-byte buzzSetup = 0;
-byte buzzRepeat = 0;
-byte buzzRepeat2 = 0;
-byte buzzAlternate = 0;
-byte changeBuzz = 0;
+byte buzzSetup = 0; // sets up the buzz for the next sequence
+byte buzzRepeat = 0; // How many times the dot or long will beep
+byte buzzRepeat2 = 0; // How many times the pattern will repeat on variable buzzRepeat
+byte buzzAlternate = 0; // If the pattern is alternating between dot or long
+byte changeBuzz = 0; // The pattern will change
 byte absoluteZero = 0; // 0 - not yet alarmed | 1 - alarmed
 
 void ringBuzzer(unsigned long buzzTotalSeconds) {
@@ -299,7 +299,7 @@ void ringBuzzer(unsigned long buzzTotalSeconds) {
     }
   }
 
-  // 1 minutes
+  // 1 minute
   if (buzzTotalSeconds <= 60 && buzzTotalSeconds > 0) {
     if (buzzRepeat2 <= 3) {
       if (buzzRepeat <= 3) {
@@ -348,7 +348,7 @@ void ringBuzzer(unsigned long buzzTotalSeconds) {
     }
   }
 
-  // ABSOLUTE ZERO
+  // time = 0
   if (buzzTotalSeconds == 0 && absoluteZero == 0) {
     if (buzzRepeat2 <= 21) {
       if (buzzRepeat2 >= 1) {

@@ -6,6 +6,7 @@ int nullInput [1][8]{
 //A,B,C,D,E,F,G
 };
 
+// The line that will display if there is no wifi
 void clockNullRegister(byte position) {
   if (position == 1) {
     shiftReExtend(1);

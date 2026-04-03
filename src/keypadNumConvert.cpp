@@ -2,6 +2,7 @@
 #include "functions.h"
 byte num = 0;
 
+//Conversion of character to integer of keypad
 byte keypadNumConvert(char keyInput) {
   switch (keyInput)
   {
