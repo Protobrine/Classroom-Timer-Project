@@ -3,15 +3,15 @@
 #ifndef functions_h
 #define functions_h
 
-#define extendPin 13
-#define STCP 14
-#define SHCP 27
-#define DS1 12
-#define DS2 26
-#define DS3 25
-#define DS4 33
+#define extendPin 23 // 23 || 13
+#define STCP 22      // 22 || 14
+#define SHCP 21      // 21 || 27
+#define DS1 19       // 19 || 12
+#define DS2 18       // 18 || 26
+#define DS3 17       // 17 || 25
+#define DS4 16       // 16 || 33
 
-#define buzzer 32
+#define buzzer 4    // 4 || 32
 
 void shiftRegister(byte Digit, byte position);
 void shiftRegisterFlicker(byte position);

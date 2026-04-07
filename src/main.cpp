@@ -6,17 +6,16 @@
 #include "time.h"
 
 // Replace with your network credentials
-const char* ssid = "PRTBRN"; // WIFI name: TUPT_Electronics Project
-const char* password = "imverypogix19"; // WIFI Password: 1qAz2wSxv
+const char* ssid = "TUPT_Electronics Project"; // WIFI name: TUPT_Electronics Project
+const char* password = "1qAz2wSxv"; // WIFI Password: 1qAz2wSxv
 
 // NTP server setup
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 28800;    // Adjust this for your timezone
 const int daylightOffset_sec = 0;  // Adjust if DST is in effect
-unsigned int NTPDelay;
-unsigned int connectingLength = 5000;
+unsigned int connectingLength = 5000; // How long to connect
 byte tryNetwork = 0; // 0 - Wifi not connected | 1 - Wifi connected
-byte instabilityChange = 0; // 0 - not connected within 5 seconds | 1 - connected within 5 seconds
+byte instabilityChange = 0; // 1 - not connected within 5 seconds | 0 - connected within 5 seconds
 byte changePrevNTP = 0; 
 
 // Countdown timer and checker
@@ -30,7 +29,7 @@ byte changeDisplay = 0; // 0 = Clock | 1 = Timer
 unsigned long prevDisplaySec = 0;
 
 // Every minute change display
-unsigned int changeDisplayInterval = 10000; // Display change interval
+unsigned int changeDisplayInterval = 5000; // Display change interval
 unsigned long prevChangeDisp = 0;
 
 const byte ROW_NUM = 4;
@@ -43,13 +42,10 @@ char keys[ROW_NUM][COLUMN_NUM] = {
   {'*', '0', '#', 'D'}
 };
 
-byte pin_rows[ROW_NUM]      = {22,21,19,18};
-byte pin_column[COLUMN_NUM] = {5,17,16,4};
+byte pin_rows[ROW_NUM]      = {13, 12, 14, 27};
+byte pin_column[COLUMN_NUM] = {26, 25, 33, 32};
 
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
-unsigned long prevDebouncer = 0;
-unsigned int debounceDelay = 500;
-byte keypadOnOff = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -72,7 +68,7 @@ void loop() {
   unsigned long currentTime = millis();
   byte inputLoc;
   char key = keypad.getKey();
-  if (setupMode == 0 && stopStart == 1) {
+  if (setupMode == 0 && stopStart == 1 && currentTime >= 5000) {
     ringBuzzer(totalSeconds);
     if (totalSeconds == 3600) {
       changeDisplay = 1;
